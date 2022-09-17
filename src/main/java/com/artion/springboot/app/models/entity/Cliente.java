@@ -1,6 +1,11 @@
 package com.artion.springboot.app.models.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,16 +22,30 @@ public class Cliente implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty
     private String nombre;
+    @NotEmpty
     private String apellido;
+    @NotEmpty
+    @Email
     private String email;
 
     /**
      * @Temporal indica el tipo de dato como se guarda en la DB
      */
+    @NotNull
     @Column(name = "create_at")
     @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createAt;
+
+    /**
+     * Con @PrePersist se va a invocar este metodo antes de insertar data a la bd
+     */
+//    @PrePersist
+//    public void prePersist(){
+//        createAt=new Date();
+//    }
 
     public Long getId() {
         return id;
