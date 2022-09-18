@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
@@ -34,8 +36,16 @@ public class ClienteController {
         return "form";
     }
 
+    //BindingResult debe estar adyacente a la entity (ex. cliente)
+    // el atributo "cliente" del metodo crear se pasa a la vista siempre y cuando el parametro se llame igual "cliente"
     @RequestMapping(value = "/form", method = RequestMethod.POST)
-    public String guardar(Cliente cliente){
+    public String guardar(@Valid Cliente cliente, BindingResult result, Model model){
+
+        if (result.hasErrors()){
+            model.addAttribute("titulo", "Formulario de Cliente");
+            return "form";
+        }
+
         clienteDao.save(cliente);
         return "redirect:listar";
     }
