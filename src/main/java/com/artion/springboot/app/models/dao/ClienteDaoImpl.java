@@ -2,13 +2,12 @@ package com.artion.springboot.app.models.dao;
 
 import com.artion.springboot.app.models.entity.Cliente;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-@Repository("clienteDaoJPA")
+@Repository
 public class ClienteDaoImpl implements IClienteDao{
 
     //va a usar JPA
@@ -19,14 +18,17 @@ public class ClienteDaoImpl implements IClienteDao{
      *  @Transactional() envolvera el metodo en un contexto de tx
      *
      */
-    @Transactional(readOnly = true)
     @Override
     public List<Cliente> findAll() {
         return em.createQuery("from Cliente").getResultList();
     }
 
     @Override
-    @Transactional
+    public Cliente findOne(Long id) {
+        return em.find(Cliente.class, id);
+    }
+
+    @Override
     public void save(Cliente cliente) {
 
         if ( cliente.getId() != null && cliente.getId() > 0){
@@ -37,7 +39,7 @@ public class ClienteDaoImpl implements IClienteDao{
     }
 
     @Override
-    public Cliente findOne(Long id) {
-        return em.find(Cliente.class, id);
+    public void delete(Long id) {
+        em.remove(findOne(id));
     }
 }

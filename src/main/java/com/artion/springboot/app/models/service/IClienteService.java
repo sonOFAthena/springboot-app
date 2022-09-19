@@ -1,11 +1,10 @@
-package com.artion.springboot.app.models.dao;
+package com.artion.springboot.app.models.service;
 
 import com.artion.springboot.app.models.entity.Cliente;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-public interface IClienteDao {
+public interface IClienteService {
     public List<Cliente> findAll();
     public void save(Cliente cliente);
     public Cliente findOne(Long id);

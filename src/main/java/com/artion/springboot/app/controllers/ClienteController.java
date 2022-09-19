@@ -1,7 +1,7 @@
 package com.artion.springboot.app.controllers;
 
-import com.artion.springboot.app.models.dao.IClienteDao;
 import com.artion.springboot.app.models.entity.Cliente;
+import com.artion.springboot.app.models.service.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -18,13 +18,12 @@ import java.util.Map;
 public class ClienteController {
 
     @Autowired
-    @Qualifier("clienteDaoJPA")
-    private IClienteDao clienteDao;
+    private IClienteService clienteService;
 
     @RequestMapping(value="/listar", method = RequestMethod.GET)
     public String listar(Model model){
         model.addAttribute("titulo", "Listado de clientes");
-        model.addAttribute("clientes", clienteDao.findAll());
+        model.addAttribute("clientes", clienteService.findAll());
         return "listar";
     }
 
@@ -41,7 +40,7 @@ public class ClienteController {
         Cliente cliente = null;
 
         if (id > 0){
-            cliente = clienteDao.findOne(id);
+            cliente = clienteService.findOne(id);
         } else {
             return "redirect:/listar";
         }
@@ -61,10 +60,20 @@ public class ClienteController {
             return "form";
         }
 
-        clienteDao.save(cliente);
+        clienteService.save(cliente);
 
         //borra la sesion actual del cliente
         status.setComplete();
         return "redirect:listar";
+    }
+
+    @RequestMapping(value = "/eliminar/{id}")
+    public String eliminar(@PathVariable(value = "id") Long id){
+
+        if (id > 0){
+           clienteService.delete(id);
+        }
+
+        return "redirect:/listar";
     }
 }
